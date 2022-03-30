@@ -1,0 +1,114 @@
+<html>
+    <body align="center">
+        <h1>welcome</h1>
+         <h2>Student Registration page</h2>
+         username<input type="text" id="uname"></input><br><br>
+         RollNumber<input type="text" id="roll"></input><br><br>
+         Password<input type="password" id="pswd"></input><br><br>
+
+
+         <button id="submit">Insert</button>  
+         <button id="update">Update</button>        
+         <button id="remove">delete</button>        
+         <button id="select">select</button>       
+         <button id="clear">clear</button>
+
+
+
+
+
+
+         <script type="module">
+            // Import the functions you need from the SDKs you need
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+            // TODO: Add SDKs for Firebase products that you want to use
+            // https://firebase.google.com/docs/web/setup#available-libraries
+          
+            // Your web app's Firebase configuration
+            const firebaseConfig = {
+              apiKey: "AIzaSyCv996JXrJys6g1PZg6t_jktlB8599Vxrw",
+              authDomain: "studentregistration-a1162.firebaseapp.com",
+              projectId: "studentregistration-a1162",
+              storageBucket: "studentregistration-a1162.appspot.com",
+              messagingSenderId: "133555729553",
+              appId: "1:133555729553:web:f380c68ca8ab6044aafb30"
+            };
+          
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+         
+        
+
+            import{
+                getDatabase,
+                ref,get,set,child,update,remove
+            } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js"; 
+            const db=getDatabase();
+            var unameBox=document.getElementById("uname");
+            var rollBox=document.getElementById("roll");
+            var pswdBox=document.getElementById("pswd");
+            var sButton=document.getElementById("submit");
+            var selButton=document.getElementById("select");
+            var cleButton=document.getElementById("clear");
+            var ubutton=document.getElementById("update");
+           var rbutton= document.getElementById("remove");
+
+     function submitdata(){
+         set(ref(db,"Student/"+rollBox.value),{
+             stdName:unameBox.value,
+             RollNum:rollBox.value,
+             Password:pswdBox.value})
+             .then(()=>alert("stud details inserted successfully"))
+             .catch((err)=>alert("data not inserted"+err))
+             cleardata();
+     }
+     function selectdata(){
+
+         const dbref=ref(db);
+         get(child(dbref,"Student/"+rollBox.value)).then((snapshot)=>{
+             if(snapshot.exists()){
+                unameBox.value=snapshot.val().stdName;
+                rollBox.value=snapshot.val().RollNum;
+                pswdBox.value=snapshot.val().Password;
+             }
+             else
+             {
+                 alert("no data found");
+             }
+         })
+         .catch((err)=>{
+             alert("Unsuccessful,error"+err);
+         });
+         
+     }
+
+function cleardata(){
+    unameBox.value="";
+    rollBox.value="";
+    pswdBox.value="";
+
+}
+function updatedata(){
+    update(ref(db,"Student/"+rollBox.value),{
+       
+             stdName:unameBox.value,
+             RollNum:rollBox.value,
+             Password:pswdBox.value})
+             .then(()=>alert("stud details updatedted successfully"))
+             .catch((err)=>alert("data not updated"+err))
+     }
+function deletedata(){
+    remove(ref(db,"Student/"+rollBox.value)) 
+    .then(()=>alert("stud details deleted successfully"))
+             .catch((err)=>alert("data not deleted"+err))
+    
+}
+
+sButton.addEventListener("click",submitdata);
+selButton.addEventListener("click",selectdata);
+cleButton.addEventListener("click",cleardata);
+ubutton.addEventListener("click",updatedata);
+rbutton.addEventListener("click",deletedata);
+        </script>
+        </body>
+</html>
